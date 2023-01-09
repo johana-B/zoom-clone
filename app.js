@@ -14,5 +14,12 @@ app.get('/:room', (req, res) => {
     res.render('room', { roomId: req.params.room })
 })
 
+io.on('connection', socket => {
+    socket.on('join-room', (roomId, userId) => {
+        socket.join(roomId)
+        socket.to(roomId).emit('user-connected', userId)
+    })
+})
+
 const port = 3000
 server.listen(port, console.log(`server is listening port ${port} ...`));
