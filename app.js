@@ -16,9 +16,16 @@ app.get('/:room', (req, res) => {
 
 io.on('connection', socket => {
     socket.on('join-room', (roomId, userId) => {
-        socket.join(roomId)
-        socket.to(roomId).emit('user-connected', userId)
+        console.log(`user ${userId} joined ${roomId}`);
+        socket.join(roomId);
+        socket.on('ready', () => {
+            socket.broadcast.to(roomId).emit('user-connected', userId);
+        })
+        socket.on('disconnect', () => {
+            socket.to(roomId).emit('user-disconnected', userId)
+        })
     })
+
 })
 
 const port = 3000
