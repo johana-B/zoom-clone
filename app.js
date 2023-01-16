@@ -6,6 +6,11 @@ const { v4: uuidV4 } = require('uuid');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
+const { ExpressPeerServer } = require('peer');
+const peerServer = ExpressPeerServer(server, {
+    debug: true,
+});
+app.use('/peerjs', peerServer);
 app.get('/', (req, res) => {
     res.redirect(`${uuidV4()}`)
 })
@@ -28,5 +33,5 @@ io.on('connection', socket => {
 
 })
 
-const port = 3000
+const port = 5000
 server.listen(port, console.log(`server is listening port ${port} ...`));
